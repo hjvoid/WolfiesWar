@@ -4,17 +4,17 @@ var config = {
 	type: Phaser.AUTO,
 	width: 800,
 	height: 600,
-	scene: {
-		preload: preload,
-		create: create,
-		update: update,
-	},
 	physics: {
 		default: 'arcade',
 		arcade: {
 			gravity: { y: 300 },
 			debug: false,
 		},
+	},
+	scene: {
+		preload: preload,
+		create: create,
+		update: update,
 	},
 };
 
@@ -42,8 +42,13 @@ function preload() {
 	this.load.image('sky2', 'src/assets/backgroundLayers/Layer_0009_2.png');
 	this.load.image('sky1', 'src/assets/backgroundLayers/Layer_0010_1.png');
 	this.load.image('sky0', 'src/assets/backgroundLayers/Layer_0011_0.png');
+	this.load.spritesheet('dude', 'src/assets/sprites/move with FX.png', {
+		frameWidth: 32,
+		frameHeight: 48,
+	});
 }
-var platforms;
+let platforms;
+let player;
 function create() {
 	this.add.image(400, 200, 'sky0');
 	this.add.image(400, 200, 'sky1');
@@ -60,11 +65,23 @@ function create() {
 
 	platforms = this.physics.add.staticGroup();
 
-	platforms.create(400, 568, 'grass_ground').setScale(2).refreshBody();
+	platforms.create(400, 200, 'grass_ground').setScale(2).refreshBody();
 
-	// platforms.create(600, 400, 'grass_ground');
-	platforms.create(20, 50, 'grass_ground');
-	platforms.create(750, -120, 'grass_ground');
+	platforms.create(600, 400, 'grass_ground');
+	platforms.create(30, 50, 'grass_ground');
+	platforms.create(750, -150, 'grass_ground');
+
+	player = this.physics.add.sprite(100, 450, 'dude');
+
+	player.setBounce(0.2);
+	player.setCollideWorldBounds(true);
+
+	this.anims.create({
+		key: 'right',
+		frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+		frameRate: 10,
+		repeat: -1,
+	});
 }
 
 function update() {}
